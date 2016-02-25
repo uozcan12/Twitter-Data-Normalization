@@ -19,14 +19,14 @@ tweets
 
 * Analyzing the words and
 
-** correction accent marks
-** correction extra whitespaces
-** omitting unnecessary letters in words
-** adding the forgotten letters in words
-** identify emojis
-** identify mentions
-** identify hashtags
-** identify punctuations
-** identify symbols
+1. correction accent marks
+2. correction extra whitespaces
+3. omitting unnecessary letters in words
+4. adding the forgotten letters in words
+5. identify emojis
+6. identify mentions
+7. identify hashtags
+8. identify punctuations
+9. identify symbols
 
 * Testing results
