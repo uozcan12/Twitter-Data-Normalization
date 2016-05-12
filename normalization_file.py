@@ -8,20 +8,25 @@ from nltk.tokenize import word_tokenize
 import collections
 from nltk.tokenize import WordPunctTokenizer
 
-tweet=input("Normalize edilecek tweeti giriniz :")
 
-#tweet='@dida bi yere gitcem "büttttttüüüünnnn insanlar hür, hysyt ve haklari bkmndn e$it doğarlaaaar.aaaaaakıl ve vicdana #sahiptirler ve birbirlerine karşi kardeslik zhnyt ile hrkt €tm€lidirl€r ." die bağırcam :)) #insanhakları www.insanhaklari.com'
+text_file = open("/home/ugur/Desktop/aslihan_nlp/mydata2.txt", "r")
+asli=text_file.readlines()
 
-########### STEP  : SPEACIAL SIGNS AND SOME 
+before_normalize=' '.join(asli)
+before_normalize=re.sub(' +',' ',before_normalize)
+#print (before_normalize)
 
-tweet_nltk=tweet.split(" ")
+print ("##################################################")
+
+tweet_nltk=before_normalize.split(" ")
+
+########### STEP  : SPEACIAL SIGNS
+
+print (tweet_nltk)
 for i in range(len(tweet_nltk)) :
     if "$" in tweet_nltk[i]:
         tweet_nltk[i]=tweet_nltk[i].replace("$","ş")
-    elif (tweet_nltk[i]=="aeo" or tweet_nltk[i]=="a.e.o" or tweet_nltk[i]=="a. e. o") :
-        tweet_nltk[i]=tweet_nltk[i].replace(tweet_nltk[i],"allaha emanet ol")
-    elif (tweet_nltk[i]=="ii" or tweet_nltk[i]=="i i") :
-        tweet_nltk[i]=tweet_nltk[i].replace(tweet_nltk[i],"iyi")     
+       
     elif "£" in tweet_nltk[i]:
         tweet_nltk[i]=tweet_nltk[i].replace("£","e")
         
@@ -31,7 +36,7 @@ for i in range(len(tweet_nltk)) :
 tweet2=' '.join(tweet_nltk)
 tweet2=re.sub(' +',' ',tweet2) 
 print ("\n\n")  
-print (tweet + "\n\n")  
+#print (tweet + "\n\n")  
 
 ugur=[]
 
@@ -68,10 +73,12 @@ for k, g in groupby(tweet2):
 
 tweet3="".join(ugur)
 
-#tokenizer = WordPunctTokenizer()
-#token = tokenizer.tokenize(tweet3)
-token=tweet3.split(" ")
+   
+tokenizer = WordPunctTokenizer()
+token = tokenizer.tokenize(tweet3)
+
 print (token)
+
 for i in range(len(token)) :
     if token[i].startswith("@"):
         token[i] = "@mention[@" + token[i+1] +"]"
@@ -83,6 +90,10 @@ for i in range(len(token)) :
         if token[i+1].startswith("."):
             token[i] = "@url[www" + token[i+1]
             token[i+1]=""
+    elif token[i].startswith("ht p"):
+        if token[i+1].startswith("."):
+            token[i] = "@url[http" + token[i+1]
+            token[i+1]=""        
     elif token[i].endswith("com"):
         token[i] = token[i-1]+"com]"
         token[i-1]=""
@@ -113,8 +124,6 @@ def unforgotten(word):
     text_file = open("/home/ugur/Dersler/Natural Processing Language/turkce_sozluk2.txt", "r")
     asli=text_file.readlines()
     text_file.close()
-   # print(len(asli))
-    #print("****")
     ugur1="".join(asli)
 
     ugur1=ugur1.replace(" ","\n")
@@ -150,54 +159,18 @@ for i in range(len(token)):
                             if token[i].find("u")==-1 :
                                 if token[i].find("ü")==-1 :
                                     if (token[i].find(" ")!=-1 or token[i].find('"')!=-1 or 
-                                        token[i].find(",")!=-1 or token[i].find(".")!=-1 or 
-                                        token[i].find(":)")!=-1 or token[i].find(":(")!=-1 or
-                                        token[i].find(":/")!=-1 or token[i].find('(=^..^=)')!=-1 or
-                                        token[i].find('(=^.^=)')!=-1 or token[i].find('(N)')!=-1 or
-                                        token[i].find('(Y)')!=-1 or token[i].find('(]:{')!=-1 or
-                                        token[i].find('(n)')!=-1 or token[i].find('(y)')!=-1 or      
-                                        token[i].find('<@%')!=-1 or token[i].find('-_-')!=-1 or      
-                                        token[i].find(':"(')!=-1 or token[i].find(":'(")!=-1 or     
-                                        token[i].find(':(')!=-1 or token[i].find(':(:)')!=-1 or     
-                                        token[i].find(':(|)')!=-1 or token[i].find(':)')!=-1 or   
-                                        token[i].find(':*')!=-1 or token[i].find(':-(')!=-1 or 
-                                        token[i].find(':-)')!=-1 or token[i].find(':-*')!=-1 or
-                                        token[i].find(':-/')!=-1 or token[i].find(':-/')!=-1 or
-                                        token[i].find(':-D')!=-1 or token[i].find(':-O')!=-1 or   
-                                        token[i].find(':-P')!=-1 or token[i].find(':-S')!=-1 or 
-                                        token[i].find("':-\'")!=-1 or token[i].find(':/')!=-1 or
-                                        token[i].find(':3')!=-1 or token[i].find(':D')!=-1 or
-                                        token[i].find(':O')!=-1 or token[i].find(':P')!=-1 or
-                                        token[i].find(':S')!=-1 or token[i].find(':X)')!=-1 or
-                                        token[i].find('":\"')!=-1 or token[i].find(':o')!=-1 or
-                                        token[i].find(':p')!=-1 or token[i].find(':s')!=-1 or
-                                        token[i].find(':|')!=-1 or token[i].find(';)')!=-1 or
-                                        token[i].find(';*')!=-1 or token[i].find(';-)')!=-1 or
-                                        token[i].find(';-*')!=-1 or token[i].find(';-P')!=-1 or
-                                        token[i].find(';-p')!=-1 or token[i].find(';P' )!=-1 or
-                                        token[i].find(';_;')!=-1 or token[i].find(';p')!=-1 or
-                                        token[i].find('</3')!=-1 or token[i].find('<3')!=-1 or
-                                        token[i].find('<\3')!=-1 or token[i].find("='(")!=-1 or
-                                        token[i].find('=(' )!=-1 or token[i].find('=)')!=-1 or
-                                        token[i].find('=*')!=-1 or token[i].find('=/')!=-1 or
-                                        token[i].find('=D')!=-1 or token[i].find('=O')!=-1 or
-                                        token[i].find('=P')!=-1 or token[i].find('B)')!=-1 or 
-                                        token[i].find('B-)')!=-1 or token[i].find('D:')!=-1 or
-                                        token[i].find('O.O')!=-1 or token[i].find('O:)')!=-1 or
-                                        token[i].find('O:-)')!=-1 or token[i].find('O=)')!=-1 or
-                                        token[i].find('^_^;;')!=-1 or token[i].find('u_u')!=-1 or
-                                        token[i].find('}:)')!=-1 or token[i].find('}:-)')!=-1 or
-                                        token[i].find('}=)')!=-1 or token[i].find('~@~')!=-1 
-                                                                                                                     
-                                        ) :
+                                        token[i].find(",")!=-1 or token[i].find(".")!=-1 or token[i].find(":)")!=-1  ) :
                                         continue
-                                    
                                     elif (token[i]=="mrb" or token[i]=="merhb") :
                                         token[i]=token[i].replace(token[i],"merhaba")
-                                    elif (token[i]=="nbr" or token[i]=="nabr") :
-                                        token[i]=token[i].replace(token[i],"ne haber")                                      
+                                    elif (token[i]=="aeo" or token[i]=="a.e.o" or token[i]=="a. e. o") :
+                                        token[i]=token[i].replace(token[i],"allaha emanet ol")    
                                     elif (token[i]=="slm" or token[i]=="selm") :
-                                        token[i]=token[i].replace(token[i],"selam")                                      
+                                        token[i]=token[i].replace(token[i],"selam")
+                                    elif (token[i]=="ii" or token[i]=="i i") :
+                                        token[i]=token[i].replace(token[i],"iyi")    
+                                    elif (token[i]=="ii" or token[i]=="i i") :
+                                        token[i]=token[i].replace(token[i],"iyi") 
                                     elif token[i]=="glyn" :
                                         token[i]=token[i].replace(token[i],"geliyorsun")
                                     elif token[i]=="ltf" or token[i]=="ltfn" :
@@ -236,7 +209,7 @@ print ("\n\n")
 ########### STEP  : EMOJİ
 
 emojis=    {'(=^..^=)' : '@gülümseyen kedi[(=^..^=)]', 
-             '(=^.^=)'  : '@gülümseyen kedi[(=^.^=)]',       
+             '(=^.^=)'  : '@gülümseyen kedi[(=^.^=)]',
     '(N)'      : '@beğenmedim[(N)]',
     '(Y)'      : '@beğendim[(Y)]',
     '(]:{'     : '@sarıklı hoca[(]:{]',
@@ -323,6 +296,9 @@ my_deasciified_turkish_txt = deasciifier.convert_to_turkish()
 print (my_deasciified_turkish_txt)
 
 print ("\n\n")
+
+
+
 
 #my_ascii_turkish_txt = "Opusmegi cagristiran catirtilar."
 #deasciifier = Deasciifier.convert_to_turkish()
