@@ -10,7 +10,7 @@ from nltk.tokenize import WordPunctTokenizer
 
 tweet=input("Normalize edilecek tweeti giriniz :")
 
-#tweet='@dida bi yere gitcem "büttttttüüüünnnn insanlar hür, hysyt ve haklari bkmndn e$it doğarlaaaar.aaaaaakıl ve vicdana #sahiptirler ve birbirlerine karşi kardeslik zhnyt ile hrkt €tm€lidirl€r ." die bağırcam :)) #insanhakları www.insanhaklari.com'
+#tweet='@dida bi yere gitcem "büttttttüüüünnnnn insanlar hür, hysyt ve haklari bkmndn e$it doğarlaaaar.aaaaaakıl ve vicdana #sahiptirler ve birbirlerine karşi kardeslik zhnyt ile hrkt €tm€lidirl€r ." die bağırcam :)) #insanhakları www.insanhaklari.com'
 
 ########### STEP  : SPEACIAL SIGNS AND SOME 
 
