@@ -528,7 +528,7 @@ print (my_deasciified_turkish_txt)
 text_file2 = open("myclean.txt", "w")
 text_file2.write(my_deasciified_turkish_txt)
 text_file2.close()
-print("########################################")
+print("#########################################")
 
 
 
