@@ -1,32 +1,314 @@
-# -*- coding:utf-8 -*-
+'''
+Created on Mar 15, 2016
 
+@author: ugur
+'''
 import nltk
 import re
 import difflib
-from deasciifier import Deasciifier
-from nltk.tokenize import word_tokenize
 import collections
-from nltk.tokenize import WordPunctTokenizer
+from deasciifier import Deasciifier
+from tkinter import Tk
+from tkinter.filedialog import askopenfilename
+
+Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
+filename = askopenfilename() # show an "Open" dialog box and return the path to the selected file
+text_file = open(filename, "r")
+text_file_readlines=text_file.readlines()
 
 
-text_file = open("/home/ugur/Desktop/aslihan_nlp/mydata2.txt", "r")
-asli=text_file.readlines()
-
-before_normalize=' '.join(asli)
+before_normalize=' '.join(text_file_readlines)
 before_normalize=re.sub(' +',' ',before_normalize)
 #print (before_normalize)
 
 print ("##################################################")
 
-tweet_nltk=before_normalize.split(" ")
+aaa=before_normalize.split(" ")
+#print (aaa)
+for i in range(len(aaa)):
+    ####### HTTPLERİ TEMİZLEME
+    if aaa[i].find("http")!= -1:
+        if aaa[i].startswith("http"):
+            if aaa[i].endswith("\n"):
+                aaa[i]="\n"
+            else :
+                aaa[i]=""
+        else :
+            aaa[i]="" 
+    ####### � TEMİZLEME           
+    elif aaa[i].find("�")!=-1:
+        if aaa[i].startswith("�"):
+            if aaa[i].endswith("\n"):
+                aaa[i]="\n"
+            else :
+                aaa[i]=aaa[i].replace("�","") 
+        else :
+                aaa[i]=aaa[i].replace("�","")
+    ####### ☀ TEMİZLEME 
+    elif aaa[i].find("☀")!=-1:
+        if aaa[i].startswith("☀"):
+            if aaa[i].endswith("\n"):
+                aaa[i]="\n"
+            else :
+                aaa[i]=aaa[i].replace("☀","") 
+        else :
+                aaa[i]=aaa[i].replace("☀","") 
+                                  
+    ####### @ TEMİZLEME           
+    elif aaa[i].find("@")!=-1:
+        if aaa[i].startswith("@"):
+            if aaa[i].endswith("\n"):
+                aaa[i]="\n"
+            else :
+                aaa[i]="" 
+        if aaa[i].startswith("@ "):
+            if aaa[i].endswith("\n"):
+                aaa[i]="\n"
+            else :
+                aaa[i]=""         
+        elif (aaa[i].startswith("(@") or aaa[i].startswith("( @")):  
+            if aaa[i].endswith("\n"):
+                aaa[i]="\n"
+            else :
+                aaa[i]=""                    
+       
+        else :
+            aaa[i]=""         
+   
+    ####### RT TEMİZLEME
+    elif aaa[i].find("RT")!=-1:        
+        if aaa[i].startswith("RT"):  
+            if aaa[i].endswith("\n"):
+                aaa[i]="\n"
+            else :
+                aaa[i]=""       
+        else :
+            aaa[i]="" 
+                    
+    ####### # TEMİZLEME
+    elif aaa[i].find("#")!=-1:        
+        if aaa[i].startswith("#"):  
+            if aaa[i].endswith("\n"):
+                aaa[i]="\n"
+            else :
+                aaa[i]=""       
+        else :
+            aaa[i]=""
+    
+    ####### " TEMİZLEME
+    elif aaa[i].find('"')!=-1:   
+        if aaa[i].startswith('"'): 
+            if aaa[i].endswith(":"):
+                aaa[i]=""
+            else :
+                aaa[i]=aaa[i].replace('"',"")  
+        else :
+                aaa[i]=aaa[i].replace('"',"")
+                
+                
+    ####### ✌ TEMİZLEME 
+    elif aaa[i].find("✌")!=-1:
+        if aaa[i].startswith("✌"):
+            if aaa[i].endswith("\n"):
+                aaa[i]="\n"
+            else :
+                aaa[i]=aaa[i].replace("✌","") 
+        else :
+                aaa[i]=aaa[i].replace("✌","") 
+    ####### ✌ TEMİZLEME 
+    elif aaa[i].find("✌")!=-1:
+        if aaa[i].startswith("✌"):
+            if aaa[i].endswith("\n"):
+                aaa[i]="\n"
+            else :
+                aaa[i]=aaa[i].replace("✌","") 
+        else :
+                aaa[i]=aaa[i].replace("✌","")             
+    
+    ####### "☔️" TEMİZLEME 
+    elif aaa[i].find("☔️")!=-1:
+        if aaa[i].startswith("☔️"):
+            if aaa[i].endswith("\n"):
+                aaa[i]="\n"
+            else :
+                aaa[i]=aaa[i].replace("☔️","") 
+        else :
+                aaa[i]=aaa[i].replace("☔️","")                         
+                        
+    ####### . TEMİZLEME
+    elif aaa[i].find(".")!= -1:
+        if aaa[i].startswith("."):
+            if aaa[i].endswith("\n"):
+                aaa[i]="\n"
+            else :
+                aaa[i]=""
+        elif aaa[i].endswith("."):
+            if aaa[i].endswith("\n"):
+                aaa[i]="\n"
+            else :
+                aaa[i]=aaa[i].replace(".","")       
+        else :
+            aaa[i]=aaa[i].replace(".","")    
+    
+    ####### ! TEMİZLEME
+    elif aaa[i].find("!")!= -1:
+        if aaa[i].startswith("!"):
+            if aaa[i].endswith("\n"):
+                aaa[i]="\n"
+            else :
+                aaa[i]=aaa[i].replace("!","")
+        elif aaa[i].endswith("!"):
+            aaa[i]=aaa[i].replace("!","")
+        else:
+            aaa[i]=aaa[i].replace("!","")      
+    ####### ? TEMİZLEME
+    elif aaa[i].find('?')!=-1:   
+        if aaa[i].startswith("?"): 
+            aaa[i]=aaa[i].replace("?","") 
+        elif aaa[i].endswith("?"): 
+            aaa[i]=aaa[i].replace("?","")  
+        else: 
+            aaa[i]=aaa[i].replace("?","") 
+            
+    ####### , TEMİZLEME
+    elif aaa[i].find(',')!=-1:   
+        if aaa[i].startswith(","): 
+            aaa[i]=aaa[i].replace(",","") 
+        elif aaa[i].endswith(","): 
+            aaa[i]=aaa[i].replace(",","")  
+        else: 
+            aaa[i]=aaa[i].replace(",","")  
+    ####### \ TEMİZLEME
+    elif aaa[i].find("'\'")!=-1: 
+        if aaa[i].startswith("'\'"):
+            aaa[i]=aaa[i].replace(aaa[i],"") 
+        elif aaa[i].endswith("'\'"): 
+            aaa[i]=aaa[i].replace(aaa[i],"\n")  
+        else: 
+            aaa[i]=aaa[i].replace(aaa[i],"")                      
+    ####### w/ TEMİZLEME
+    elif aaa[i].find("w/")!=-1: 
+        if aaa[i].startswith("w/"):
+            aaa[i]=aaa[i].replace(aaa[i],"") 
+        elif aaa[i].endswith("'w/'"): 
+            aaa[i]=aaa[i].replace(aaa[i],"\n")  
+        else: 
+            aaa[i]=aaa[i].replace(aaa[i],"") 
+    ####### ” TEMİZLEME
+    elif aaa[i].find("”")!=-1: 
+        if aaa[i].startswith("”"):
+            aaa[i]=aaa[i].replace("”","") 
+        elif aaa[i].endswith("”"): 
+            aaa[i]=aaa[i].replace("”","\n")  
+        else: 
+            aaa[i]=aaa[i].replace("”","")                
+    ####### “ TEMİZLEME
+    elif aaa[i].find("“")!=-1: 
+        if aaa[i].startswith("“"):
+            if aaa[i].endswith("”"): 
+                if aaa[i].endswith("\n"):
+                    aaa[i]=aaa[i].replace("”","\n") 
+                    aaa[i]=aaa[i].replace("“","")
+                else:
+                    aaa[i]=aaa[i].replace("”","") 
+                    aaa[i]=aaa[i].replace("“","")
+            else:
+                aaa[i]=aaa[i].replace("”","")               
+       
+        else: 
+            aaa[i]=aaa[i].replace("“","")
+    
+    ####### ; TEMİZLEME
+    elif aaa[i].find(";")!=-1: 
+        if aaa[i].startswith(";"):
+            aaa[i]=aaa[i].replace(";","") 
+        elif aaa[i].endswith(";"):
+            if aaa[i].endswith("\n"):
+                aaa[i]=aaa[i].replace(";","\n") 
+            else:
+                aaa[i]=aaa[i].replace(";","")  
+        else: 
+            aaa[i]=aaa[i].replace(";","")
+    
+    ####### - TEMİZLEME
+    elif aaa[i].find("-")!=-1: 
+        if aaa[i].startswith("-"):
+            aaa[i]=aaa[i].replace("-"," ") 
+        elif aaa[i].endswith("-"): 
+            aaa[i]=aaa[i].replace("-","\n")  
+        else: 
+            aaa[i]=aaa[i].replace("-"," ")                 
+    
+    ####### ' TEMİZLEME
+    elif aaa[i].find("'")!=-1: 
+        if aaa[i].startswith("'"):
+            if aaa[i].endswith("\n"): 
+                aaa[i]=aaa[i].replace("'","\n")
+            else:    
+                aaa[i]=aaa[i].replace("'","") 
+        elif aaa[i].endswith("'"): 
+            if aaa[i].endswith("\n"): 
+                aaa[i]=aaa[i].replace("'","\n")  
+        else: 
+            aaa[i]=aaa[i].replace("'","")
+    ####### … TEMİZLEME
+    elif aaa[i].find("…")!=-1: 
+        if aaa[i].startswith("…"):
+            if aaa[i].endswith("\n"): 
+                aaa[i]=aaa[i].replace("…","\n")
+            else:    
+                aaa[i]=aaa[i].replace("…","") 
+        elif aaa[i].endswith("…"): 
+            if aaa[i].endswith("\n"): 
+                aaa[i]=aaa[i].replace("…","\n")
+            else:
+                aaa[i]=aaa[i].replace("…","")     
+        else: 
+            aaa[i]=aaa[i].replace("…","")                     
+    
+    ####### ) TEMİZLEME
+    elif aaa[i].find(")")!=-1: 
+        if aaa[i].startswith(")"):
+            if aaa[i].endswith("\n"): 
+                aaa[i]=aaa[i].replace(aaa[i],"\n")
+            else:    
+                aaa[i]=aaa[i].replace(")","") 
+        elif aaa[i].endswith(")"): 
+            if aaa[i].endswith("\n"): 
+                aaa[i]=aaa[i].replace(aaa[i],"\n")
+            else:
+                aaa[i]=aaa[i].replace(")","")     
+        else: 
+            aaa[i]=aaa[i].replace(")","")
+       
+    ####### emoji shortcut TEMİZLEME
+    elif aaa[i].find(":")!=-1:
+        if aaa[i].startswith(":"):
+            if aaa[i].endswith("\n"):
+                aaa[i]="\n"
+            else :
+                aaa[i]=aaa[i].replace(":","") 
+        elif aaa[i].endswith(":"):
+            if aaa[i].endswith("\n"):
+                aaa[i]="\n"
+            else :
+                aaa[i]=aaa[i].replace(":","")
+        else :
+            aaa[i]=aaa[i].replace(":","")              
+        
+        
+           
+clear_sign=' '.join(aaa)
+clear_sign=re.sub(' +',' ',clear_sign)
 
-########### STEP  : SPEACIAL SIGNS
-
-print (tweet_nltk)
+tweet_nltk=clear_sign.split(" ")
 for i in range(len(tweet_nltk)) :
     if "$" in tweet_nltk[i]:
         tweet_nltk[i]=tweet_nltk[i].replace("$","ş")
-       
+    elif (tweet_nltk[i]=="aeo" or tweet_nltk[i]=="a.e.o" or tweet_nltk[i]=="a. e. o") :
+        tweet_nltk[i]=tweet_nltk[i].replace(tweet_nltk[i],"allaha emanet ol")
+    elif (tweet_nltk[i]=="ii" or tweet_nltk[i]=="i i") :
+        tweet_nltk[i]=tweet_nltk[i].replace(tweet_nltk[i],"iyi")     
     elif "£" in tweet_nltk[i]:
         tweet_nltk[i]=tweet_nltk[i].replace("£","e")
         
@@ -36,7 +318,7 @@ for i in range(len(tweet_nltk)) :
 tweet2=' '.join(tweet_nltk)
 tweet2=re.sub(' +',' ',tweet2) 
 print ("\n\n")  
-#print (tweet + "\n\n")  
+  
 
 ugur=[]
 
@@ -73,30 +355,21 @@ for k, g in groupby(tweet2):
 
 tweet3="".join(ugur)
 
-   
-tokenizer = WordPunctTokenizer()
-token = tokenizer.tokenize(tweet3)
-
+#tokenizer = WordPunctTokenizer()
+#token = tokenizer.tokenize(tweet3)
+token=tweet3.split(" ")
 print (token)
-
 for i in range(len(token)) :
     if token[i].startswith("@"):
-        token[i] = "@mention[@" + token[i+1] +"]"
-        token[i+1]=""
+        token[i] = "@mention[" + token[i] +"]"
     elif token[i].startswith("#"):
-        token[i] = "@hashtag[#" + token[i+1] +"]"
-        token[i+1]=""
-    elif token[i].startswith("w"):
-        if token[i+1].startswith("."):
-            token[i] = "@url[www" + token[i+1]
-            token[i+1]=""
-    elif token[i].startswith("ht p"):
-        if token[i+1].startswith("."):
-            token[i] = "@url[http" + token[i+1]
-            token[i+1]=""        
-    elif token[i].endswith("com"):
-        token[i] = token[i-1]+"com]"
-        token[i-1]=""
+        token[i] = "@hashtag[#" + token[i] +"]"
+    elif token[i].startswith("w."):
+        if token[i].endswith(".com"):
+            token[i] = "@url[ww" + token[i] + "]"
+    elif token[i].startswith("htp."):
+        if token[i].endswith(".com"):
+            token[i] = "@url[" + token[i] + "]"        
     elif token[i].endswith("tcem"):
         token[i]=token[i].replace("tcem","deceğim")
     elif token[i].endswith("tçem"):
@@ -121,9 +394,11 @@ for i in range(len(token)) :
 
 def unforgotten(word):
 
-    text_file = open("/home/ugur/Dersler/Natural Processing Language/turkce_sozluk2.txt", "r")
+    text_file = open("turkce_sozluk2.txt", "r")
     asli=text_file.readlines()
     text_file.close()
+   # print(len(asli))
+    #print("****")
     ugur1="".join(asli)
 
     ugur1=ugur1.replace(" ","\n")
@@ -140,7 +415,7 @@ def unforgotten(word):
         ugur4.append(x)
    
 
-    text_file2 = open("/home/ugur/Dersler/Natural Processing Language/turkce_sozluk2.txt", "w")
+    text_file2 = open("turkce_sozluk2.txt", "w")
     for item in ugur4:
         text_file2.write("%s\n" % item)
 
@@ -159,18 +434,55 @@ for i in range(len(token)):
                             if token[i].find("u")==-1 :
                                 if token[i].find("ü")==-1 :
                                     if (token[i].find(" ")!=-1 or token[i].find('"')!=-1 or 
-                                        token[i].find(",")!=-1 or token[i].find(".")!=-1 or token[i].find(":)")!=-1  ) :
+                                        token[i].find(",")!=-1 or token[i].find(".")!=-1 or 
+                                        token[i].find(":)")!=-1 or token[i].find(":(")!=-1 or
+                                        token[i].find(":/")!=-1 or token[i].find('(=^..^=)')!=-1 or
+                                        token[i].find('(=^.^=)')!=-1 or token[i].find('(N)')!=-1 or
+                                        token[i].find('(Y)')!=-1 or token[i].find('(]:{')!=-1 or
+                                        token[i].find('(n)')!=-1 or token[i].find('(y)')!=-1 or      
+                                        token[i].find('<@%')!=-1 or token[i].find('-_-')!=-1 or      
+                                        token[i].find(':"(')!=-1 or token[i].find(":'(")!=-1 or     
+                                        token[i].find(':(')!=-1 or token[i].find(':(:)')!=-1 or     
+                                        token[i].find(':(|)')!=-1 or token[i].find(':)')!=-1 or   
+                                        token[i].find(':*')!=-1 or token[i].find(':-(')!=-1 or 
+                                        token[i].find(':-)')!=-1 or token[i].find(':-*')!=-1 or
+                                        token[i].find(':-/')!=-1 or token[i].find(':-/')!=-1 or
+                                        token[i].find(':-D')!=-1 or token[i].find(':-O')!=-1 or   
+                                        token[i].find(':-P')!=-1 or token[i].find(':-S')!=-1 or 
+                                        token[i].find("':-\'")!=-1 or token[i].find(':/')!=-1 or
+                                        token[i].find(':3')!=-1 or token[i].find(':D')!=-1 or
+                                        token[i].find(':O')!=-1 or token[i].find(':P')!=-1 or
+                                        token[i].find(':S')!=-1 or token[i].find(':X)')!=-1 or
+                                        token[i].find('":\"')!=-1 or token[i].find(':o')!=-1 or
+                                        token[i].find(':p')!=-1 or token[i].find(':s')!=-1 or
+                                        token[i].find(':|')!=-1 or token[i].find(';)')!=-1 or
+                                        token[i].find(';*')!=-1 or token[i].find(';-)')!=-1 or
+                                        token[i].find(';-*')!=-1 or token[i].find(';-P')!=-1 or
+                                        token[i].find(';-p')!=-1 or token[i].find(';P' )!=-1 or
+                                        token[i].find(';_;')!=-1 or token[i].find(';p')!=-1 or
+                                        token[i].find('</3')!=-1 or token[i].find('<3')!=-1 or
+                                        token[i].find('<\3')!=-1 or token[i].find("='(")!=-1 or
+                                        token[i].find('=(' )!=-1 or token[i].find('=)')!=-1 or
+                                        token[i].find('=*')!=-1 or token[i].find('=/')!=-1 or
+                                        token[i].find('=D')!=-1 or token[i].find('=O')!=-1 or
+                                        token[i].find('=P')!=-1 or token[i].find('B)')!=-1 or 
+                                        token[i].find('B-)')!=-1 or token[i].find('D:')!=-1 or
+                                        token[i].find('O.O')!=-1 or token[i].find('O:)')!=-1 or
+                                        token[i].find('O:-)')!=-1 or token[i].find('O=)')!=-1 or
+                                        token[i].find('^_^;;')!=-1 or token[i].find('u_u')!=-1 or
+                                        token[i].find('}:)')!=-1 or token[i].find('}:-)')!=-1 or
+                                        token[i].find('}=)')!=-1 or token[i].find('~@~')!=-1 
+                                                                                                                     
+                                        ) :
                                         continue
+                                    elif token[i].find("\n")!=-1 :
+                                        continue 
                                     elif (token[i]=="mrb" or token[i]=="merhb") :
                                         token[i]=token[i].replace(token[i],"merhaba")
-                                    elif (token[i]=="aeo" or token[i]=="a.e.o" or token[i]=="a. e. o") :
-                                        token[i]=token[i].replace(token[i],"allaha emanet ol")    
+                                    elif (token[i]=="nbr" or token[i]=="nabr") :
+                                        token[i]=token[i].replace(token[i],"ne haber")                                      
                                     elif (token[i]=="slm" or token[i]=="selm") :
-                                        token[i]=token[i].replace(token[i],"selam")
-                                    elif (token[i]=="ii" or token[i]=="i i") :
-                                        token[i]=token[i].replace(token[i],"iyi")    
-                                    elif (token[i]=="ii" or token[i]=="i i") :
-                                        token[i]=token[i].replace(token[i],"iyi") 
+                                        token[i]=token[i].replace(token[i],"selam")                                      
                                     elif token[i]=="glyn" :
                                         token[i]=token[i].replace(token[i],"geliyorsun")
                                     elif token[i]=="ltf" or token[i]=="ltfn" :
@@ -206,105 +518,25 @@ xxx=' '.join(token)
 xxx=re.sub(' +',' ',xxx)
 print ("\n\n") 
 
-########### STEP  : EMOJİ
-
-emojis=    {'(=^..^=)' : '@gülümseyen kedi[(=^..^=)]', 
-             '(=^.^=)'  : '@gülümseyen kedi[(=^.^=)]',
-    '(N)'      : '@beğenmedim[(N)]',
-    '(Y)'      : '@beğendim[(Y)]',
-    '(]:{'     : '@sarıklı hoca[(]:{]',
-    '(n)'      : '@beğenmedim[(n)]',
-    '(y)'      : '@beğendim[(y)]',
-    '<@%'      : '@arı[<@%]',
-    '-_-'      : '@ifadesiz yüz[-_-]',
-    ':"('      : '@göz yaşları dinmeyen yüz[:"(]',
-    ":'("      : "@ağlayan yüz[:'(]",
-    ':('       : '@üzgün surat[:(]',
-    ':(:)'     : '@üzgün domuz[:(:)]',
-    ':(|)'     : '@üzgün maymun[:(|)]',
-    ':)'       : '@gülümseyen yüz[:)]',
-    ':*'       : '@öpücük veren yüz[:*]',
-    ':-('      : '@sırıtan ve içten pazarlıklı yüz[:-(]',
-    ':-)'      : '@gülümseyen yüz[:-)]',
-    #####################################################
-    ':-*' : '@öpücük veren yüz[:-*]',
-    ':-/' : '@üzgün gülümseme[:-/]',
-    ':-/' : '@üzgün gülümseme[:-/]',
-    ':-D' : '@kahkaha atan yüz[:-D]',
-    ':-O' : '@şaşıran yüz[:-)]',   
-    ':-P' : '@dil çıkaran gülümseme[:-P]',
-    ':-S' : '@üzülen yüz[:S]',  
-    "':-\'" : '@üzgün gülümseme', 
-    ':/' : '@üzgün gülümseme[:/]',
-    ':3' : '@aşık kedi[',
-    ':D' : '@kahkaha atan yüz[:D]',
-    ':O' : '@afallayan gülümseme[:O]',
-    ':P' : '@dil çıkaran gülümseme[:P]',
-    ':S' : '@üzgün gülümseme[:S]',
-    ':X)' : '@gülümseyen kedi[',
-    #####################################################
-    '":\"' : '@üzgün gülümseme[:\]',
-    ':o' : '@afallayan gülümseme[:o]',
-    ':p' : '@dil çıkaran gülümseme[:p]',
-    ':s' : '@üzgün gülümseme[:s]',
-    ':|' : 'ifadesiz yüz[:|]',
-    ';)' : 'göz kırpan yüz[;)]',
-    ';*' : '@aşkla öpücük veren yüz[;*]',
-    ';-)' : '@gülümseyen yüz[;-)]',
-    ';-*' : '@aşkla öpücük veren yüz[;-*]',
-    ';-P' : '@dil çıkaran gülümseme[;-P]',
-    ';-p' : '@dil çıkaran gülümseme[;-p]',
-    ';P' : '@dil çıkaran gülümseme[;P]',
-    ';_;' : '@ağlayan yüz[;_;]',
-    ';p' : '@dil çıkaran gülümseme[;p]',
-    '</3' : '@kırık kalp[</3]',
-    '<3' : '@kalp[<3]',
-    '<\3' : '@kırık kalp[<\3]',
-    "='(" : '@ağlayan yüz',
-    '=(' :'@mutsuz yüz[=(]'  ,
-    #####################################################
-    '=)' : '@gülümseyen yüz[=)]',
-    '=*' : '@öpücük atan yüz[*=]',
-    '=/' : '@üzgün gülümseme[=/]',
-    '=D' : '@kahkaha atan yüz[=D]',
-    '=O' : '@afallayan gülümseme[=O]',
-    '=P' : '@dil çıkaran gülümseme[=]',
-    'B)' : '@hava atan gülümseme[B)]',
-    'B-)' : '@hava atan gülümseme[B-)]',
-    #####################################################
-    'D:' : 'hayal kırıklığına uğramış yüz[D:]',
-    'O.O' : '@afallayan gülümseme[O.O]',
-    'O:)' : '@gülümseyen melek yüz[O:)]',
-    'O:-)' : '@gülümseyen melek yüz[O:)]',
-    'O=)' : '@gülümseyen melek yüz[O=)]',
-    '^_^;;' : '@alnından soğuk terler döken gülümseme[^_^;;]',
-    'u_u' : '@morali bozuk gülümseme[u_u]',
-    #####################################################
-    '}:)' : '@şeytani[}:)]',
-    '}:-)' : '@şeytani[}:-)]',
-    '}=)' : '@şeytani[}=)]',
-    '~@~' : '@insanpisliği[~@~]'}
-
-for emo in emojis :
-    xxx=xxx.replace(emo,emojis[emo])
- 
-
-########### STEP  : DEASCIIFIER
 my_ascii_turkish_txt = xxx
 deasciifier = Deasciifier(my_ascii_turkish_txt)
 my_deasciified_turkish_txt = deasciifier.convert_to_turkish()
 print (my_deasciified_turkish_txt)
 
-print ("\n\n")
+
+
+text_file2 = open("myclean.txt", "w")
+text_file2.write(my_deasciified_turkish_txt)
+text_file2.close()
+print("########################################")
 
 
 
 
-#my_ascii_turkish_txt = "Opusmegi cagristiran catirtilar."
-#deasciifier = Deasciifier.convert_to_turkish()
-#my_deasciified_turkish_txt = deasciifier.convert_to_turkish()
-#print my_deasciified_turkish_txt.encode("utf-8")
- 
- 
     
- 
+   
+    
+  
+    
+    
+

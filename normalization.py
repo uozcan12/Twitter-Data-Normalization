@@ -74,18 +74,15 @@ token=tweet3.split(" ")
 print (token)
 for i in range(len(token)) :
     if token[i].startswith("@"):
-        token[i] = "@mention[@" + token[i+1] +"]"
-        token[i+1]=""
+        token[i] = "@mention[" + token[i] +"]"
     elif token[i].startswith("#"):
-        token[i] = "@hashtag[#" + token[i+1] +"]"
-        token[i+1]=""
-    elif token[i].startswith("w"):
-        if token[i+1].startswith("."):
-            token[i] = "@url[www" + token[i+1]
-            token[i+1]=""
-    elif token[i].endswith("com"):
-        token[i] = token[i-1]+"com]"
-        token[i-1]=""
+        token[i] = "@hashtag[#" + token[i] +"]"
+    elif token[i].startswith("w."):
+        if token[i].endswith(".com"):
+            token[i] = "@url[ww" + token[i] + "]"
+    elif token[i].startswith("htp."):
+        if token[i].endswith(".com"):
+            token[i] = "@url[" + token[i] + "]"        
     elif token[i].endswith("tcem"):
         token[i]=token[i].replace("tcem","deceğim")
     elif token[i].endswith("tçem"):
@@ -110,7 +107,7 @@ for i in range(len(token)) :
 
 def unforgotten(word):
 
-    text_file = open("/home/ugur/Dersler/Natural Processing Language/turkce_sozluk2.txt", "r")
+    text_file = open("/home/ugur/workspace/Twitter Data Normalization/src/turkce_sozluk2.txt", "r")
     asli=text_file.readlines()
     text_file.close()
    # print(len(asli))
@@ -131,7 +128,7 @@ def unforgotten(word):
         ugur4.append(x)
    
 
-    text_file2 = open("/home/ugur/Dersler/Natural Processing Language/turkce_sozluk2.txt", "w")
+    text_file2 = open("/home/ugur/workspace/Twitter Data Normalization/src/turkce_sozluk2.txt", "w")
     for item in ugur4:
         text_file2.write("%s\n" % item)
 
